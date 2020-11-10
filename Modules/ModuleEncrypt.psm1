@@ -1,7 +1,3 @@
-$AesProvider = New-Object System.Security.Cryptography.AesManaged
-$AesProvider.KeySize = 256
-$AesProvider.BlockSize = 128
-$AesProvider.Mode = [System.Security.Cryptography.CipherMode]::CBC
 
 Function Get-Folder{
     [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")|Out-Null
@@ -33,6 +29,12 @@ Function Encrypt-File {
         Write-Error "Could not load required assembly. \n $($_.Message)"
         Return 
     }  
+
+    $AesProvider = New-Object System.Security.Cryptography.AesManaged
+    $AesProvider.KeySize = 256
+    $AesProvider.BlockSize = 128
+    $AesProvider.Mode = [System.Security.Cryptography.CipherMode]::CBC
+
 
     $KeyFormatter = New-Object System.Security.Cryptography.RSAPKCS1KeyExchangeFormatter($Cert.PublicKey.Key)
     [Byte[]]$KeyEncrypted = $KeyFormatter.CreateKeyExchange($AesProvider.Key, $AesProvider.GetType())
@@ -104,7 +106,13 @@ Function Decrypt-File {
         Write-Error "Could not load required assembly.  \n $($_.Message)"
         Return 
     }  
-     
+    
+    $AesProvider = New-Object System.Security.Cryptography.AesManaged
+    $AesProvider.KeySize = 256
+    $AesProvider.BlockSize = 128
+    $AesProvider.Mode = [System.Security.Cryptography.CipherMode]::CBC
+
+
     [Byte[]]$LenKey = New-Object Byte[] 4
     [Byte[]]$LenIV = New-Object Byte[] 4
 
